@@ -34,3 +34,17 @@ async def get_all_devices_service(
     device_list = await get_all_devices(db)
     return device_list
     
+    
+async def get_device_by_device_id_service(
+    db: AsyncSession,
+    device_id: str
+) -> Device:
+    device = await get_device_by_device_id(db, device_id)
+    
+    if device is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Device not found"
+        )
+    
+    return device
