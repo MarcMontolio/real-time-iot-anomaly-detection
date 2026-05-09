@@ -1,9 +1,17 @@
 [project]
 name = "real-time-iot-anomaly-detection"
 version = "0.1.0"
-description = "Real-time IoT anomaly detection system using fastAPI, MQTT Redis, PostgreSQL and machine learning."
+description = "Real-time IoT anomaly detection system using FastAPI, MQTT, Redis, PostgreSQL and machine learning."
 requires-python = ">=3.12"
-dependencies = []
+dependencies = [
+    "fastapi",
+    "uvicorn",
+    "pydantic-settings",
+    "sqlalchemy",
+    "asyncpg",
+    "psycopg[binary]",
+    "alembic",
+]
 
 [project.optional-dependencies]
 dev = [
@@ -11,9 +19,6 @@ dev = [
     "pytest-asyncio",
     "ruff",
     "mypy",
-    "fastapi",
-    "uvicorn",
-    "pydantic-settings",
     "httpx",
 ]
 
@@ -28,3 +33,7 @@ strict = true
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 asyncio_mode = "auto"
+
+[tool.setuptools.packages.find]
+include = ["app*"]
+exclude = ["docker*"]

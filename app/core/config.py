@@ -17,4 +17,4 @@ class Settings(BaseSettings):
     mqtt_port: int
     log_level: str
 
-settings = Settings()
+settings = Settings()  # type: ignore[call-arg]
