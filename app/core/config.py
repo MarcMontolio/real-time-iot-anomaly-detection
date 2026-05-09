@@ -12,6 +12,8 @@ class Settings(BaseSettings):
     api_v1_prefix: str
     database_url: str
     database_sync_url: str
+    test_database_url: str
+    test_database_sync_url: str
     redis_url: str
     mqtt_host: str
     mqtt_port: int
