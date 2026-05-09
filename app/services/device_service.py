@@ -2,7 +2,7 @@ from fastapi import HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.models.device import Device
-from app.repositories.device_repository import create_device, get_device_by_device_id
+from app.repositories.device_repository import create_device, get_device_by_device_id, get_all_devices
 from app.schemas.device import DeviceCreate
 
 
@@ -26,3 +26,11 @@ async def create_device_service(
     except Exception:
         await db.rollback()
         raise
+    
+
+async def get_all_devices_service(
+    db: AsyncSession
+) -> list[Device]:
+    device_list = await get_all_devices(db)
+    return device_list
+    

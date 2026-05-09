@@ -29,3 +29,11 @@ async def create_device(
     await db.flush()
 
     return device
+
+
+async def get_all_devices(
+    db: AsyncSession
+) -> list[Device]:
+    statement = select(Device)
+    result = await db.execute(statement)
+    return list(result.scalars().all())
