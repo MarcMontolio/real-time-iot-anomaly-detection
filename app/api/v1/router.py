@@ -2,6 +2,7 @@ from fastapi import APIRouter
 
 from app.core.config import settings
 from app.api.v1.endpoints import health
+from app.api.v1.endpoints import devices
 
 
 router = APIRouter(
@@ -9,3 +10,4 @@ router = APIRouter(
 )
 
 router.include_router(health.router)
+router.include_router(devices.router)
