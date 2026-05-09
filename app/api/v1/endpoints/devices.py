@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, status
+from fastapi import APIRouter, Depends, status, Query
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.schemas.device import DeviceCreate, DeviceRead
@@ -25,9 +25,11 @@ async def create_new_device(
     response_model=list[DeviceRead]
 )
 async def get_devices(
-    db: AsyncSession = Depends(get_db)
+    limit: int = Query(default=100, ge=1, le=500),
+    offset: int = Query(default=0, ge=0),
+    db: AsyncSession = Depends(get_db),
 ) -> list[Device]:
-    return await get_all_devices_service(db)
+    return await get_all_devices_service(db, limit, offset)
 
 
 @router.get(

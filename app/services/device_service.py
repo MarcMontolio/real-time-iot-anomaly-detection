@@ -29,10 +29,11 @@ async def create_device_service(
     
 
 async def get_all_devices_service(
-    db: AsyncSession
+    db: AsyncSession,
+    limit: int,
+    offset: int,
 ) -> list[Device]:
-    device_list = await get_all_devices(db)
-    return device_list
+    return await get_all_devices(db, limit, offset)
     
     
 async def get_device_by_device_id_service(

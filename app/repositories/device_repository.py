@@ -32,8 +32,10 @@ async def create_device(
 
 
 async def get_all_devices(
-    db: AsyncSession
+    db: AsyncSession,
+    limit: int,
+    offset: int,
 ) -> list[Device]:
-    statement = select(Device)
+    statement = select(Device).offset(offset).limit(limit)
     result = await db.execute(statement)
     return list(result.scalars().all())
