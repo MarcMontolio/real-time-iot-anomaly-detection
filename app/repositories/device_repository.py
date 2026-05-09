@@ -36,6 +36,15 @@ async def get_all_devices(
     limit: int,
     offset: int,
 ) -> list[Device]:
-    statement = select(Device).offset(offset).limit(limit)
+    statement = select(Device).limit(limit).offset(offset)
     result = await db.execute(statement)
     return list(result.scalars().all())
+
+
+async def get_device_by_id(
+    db: AsyncSession,
+    device_id: int,
+) -> Device | None:
+    statement = select(Device).where(Device.id == device_id)
+    result = await db.execute(statement)
+    return result.scalar_one_or_none()
