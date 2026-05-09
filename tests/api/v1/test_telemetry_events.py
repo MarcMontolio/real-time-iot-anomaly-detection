@@ -55,22 +55,49 @@ def test_post_telemetry_event_with_unknown_device_returns_404(client: TestClient
     
 def test_is_anomaly_returns_true(client: TestClient) -> None:
     device_data = create_test_device(client)
-    
+
+    normal_payloads = [
+        {
+            "device_id": device_data["id"],
+            "metric_name": "temperature",
+            "metric_value": 40.0,
+            "timestamp": "2026-05-09T12:00:00Z",
+        },
+        {
+            "device_id": device_data["id"],
+            "metric_name": "temperature",
+            "metric_value": 41.0,
+            "timestamp": "2026-05-09T12:01:00Z",
+        },
+        {
+            "device_id": device_data["id"],
+            "metric_name": "temperature",
+            "metric_value": 42.0,
+            "timestamp": "2026-05-09T12:02:00Z",
+        },
+    ]
+
+    for payload in normal_payloads:
+        response = client.post("/api/v1/telemetry", json=payload)
+
+        assert response.status_code == status.HTTP_201_CREATED
+
     anomaly_payload: dict[str, object] = {
         "device_id": device_data["id"],
         "metric_name": "temperature",
         "metric_value": 95.5,
         "timestamp": "2026-05-09T12:05:00Z",
     }
-    
+
     response = client.post("/api/v1/telemetry", json=anomaly_payload)
-    
+
     assert response.status_code == status.HTTP_201_CREATED
-    
+
     data: dict[str, object] = response.json()
-    
+
     assert data["is_anomaly"] is True
-    assert data["anomaly_score"] == 0.955
+    assert isinstance(data["anomaly_score"], float)
+    assert data["anomaly_score"] > 3.0
     
     
 def test_get_all_telemetry_events_returns_list(client: TestClient) -> None:

@@ -47,3 +47,24 @@ async def get_telemetry_events_by_device_id(
     )
     result = await db.execute(statement)
     return list(result.scalars().all())
+
+
+async def get_telemetry_events_by_device_id_and_metric_name(
+    db: AsyncSession,
+    device_id: int,
+    limit: int,
+    offset: int,
+    metric_name: str,
+) -> list[TelemetryEvent]:
+    statement = (
+        select(TelemetryEvent)
+        .where(
+            TelemetryEvent.device_id == device_id,
+            TelemetryEvent.metric_name == metric_name
+        )
+        .order_by(TelemetryEvent.timestamp.desc())
+        .limit(limit)
+        .offset(offset)
+    )
+    result = await db.execute(statement)
+    return list(result.scalars().all())

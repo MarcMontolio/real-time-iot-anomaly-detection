@@ -8,10 +8,12 @@ from app.repositories.telemetry_repository import (
     create_telemetry_event,
     get_all_telemetry_events,
     get_telemetry_events_by_device_id,
+    get_telemetry_events_by_device_id_and_metric_name,
 )
 
 from app.schemas.telemetry_event import TelemetryEventCreate
 
+from app.services.anomaly_detection import detect_anomaly
 
 async def create_telemetry_event_service(
     db: AsyncSession,
@@ -26,10 +28,32 @@ async def create_telemetry_event_service(
         )
         
     try:
+        historical_events = await get_telemetry_events_by_device_id_and_metric_name(
+        db=db,
+        device_id=telemetry_event_data.device_id,
+        metric_name=telemetry_event_data.metric_name,
+        limit=50,
+        offset=0,
+        )
+        
+        historical_values = [
+            event.metric_value
+            for event in historical_events
+        ]
+        
+        if len(historical_values) >= 3:
+            is_anomaly, anomaly_score = detect_anomaly(
+                value=telemetry_event_data.metric_value,
+                historical_values=historical_values,
+            )
+        else:
+            is_anomaly = False
+            anomaly_score = 0.0
+        
         telemetry_event = await create_telemetry_event(db, telemetry_event_data)
         
-        telemetry_event.is_anomaly = telemetry_event_data.metric_value > 90
-        telemetry_event.anomaly_score = telemetry_event_data.metric_value / 100
+        telemetry_event.is_anomaly = is_anomaly
+        telemetry_event.anomaly_score = anomaly_score
         
         await db.commit()
         await db.refresh(telemetry_event)
