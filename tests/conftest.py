@@ -41,6 +41,7 @@ def clean_devices_table() -> Generator[None]:
 
     with psycopg.connect(test_sync_url) as conn:
         with conn.cursor() as cursor:
+            cursor.execute("DELETE FROM telemetry_events")
             cursor.execute("DELETE FROM devices;")
         conn.commit()
 
