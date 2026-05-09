@@ -11,6 +11,7 @@ dependencies = [
     "asyncpg",
     "psycopg[binary]",
     "alembic",
+    "paho-mqtt",
 ]
 
 [project.optional-dependencies]

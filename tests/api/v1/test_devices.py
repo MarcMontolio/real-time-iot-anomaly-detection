@@ -152,7 +152,7 @@ def test_get_device_offset_works(client: TestClient) -> None:
     assert data[0]["device_id"] == "sensor-003"
     
     
-def test_get_device_limit_limitation_works (client: TestClient) -> None:
+def test_get_device_limit_limitation_returns_422 (client: TestClient) -> None:
     payload = {
             "device_id": "sensor-001",
             "name": "Temperature Sensor",
