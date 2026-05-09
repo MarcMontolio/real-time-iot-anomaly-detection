@@ -11,6 +11,9 @@ dev = [
     "pytest-asyncio",
     "ruff",
     "mypy",
+    "fastapi",
+    "uvicorn",
+    "pydantic-settings",
 ]
 
 [tool.ruff]
