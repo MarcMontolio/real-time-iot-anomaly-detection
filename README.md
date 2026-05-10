@@ -106,7 +106,7 @@ scripts/
 ### Clone repository
 
 ```bash
-git clone <your_url_repo>
+git clone https://github.com/MarcMontolio/real-time-iot-anomaly-detection
 cd real-time-iot-anomaly-detection
 ```
 
@@ -195,6 +195,7 @@ pytest -v
 | GET | `/api/v1/devices/{device_id}/telemetry` | Device telemetry |
 | POST | `/api/v1/telemetry` | Create telemetry event |
 | GET | `/api/v1/telemetry` | List telemetry events |
+
 ---
 
 ## Example Use Cases
@@ -205,6 +206,7 @@ pytest -v
 - Environmental sensor monitoring
 - Edge telemetry analysis
 - Real-time alerting systems
+
 ---
 
 ## Future Improvements
@@ -217,6 +219,7 @@ pytest -v
 - Historical analytics
 - Prometheus & Grafana observability
 - Kubernetes deployment
+
 ---
 
 ## License
