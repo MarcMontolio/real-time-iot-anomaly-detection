@@ -189,3 +189,27 @@ def test_get_device_telemetry_event_limit_validation_returns_422(client: TestCli
     )
     
     assert response.status_code == status.HTTP_422_UNPROCESSABLE_CONTENT
+
+
+def test_telemetry_event_with_insufficient_history_is_not_anomaly(client: TestClient) -> None:
+    device_data = create_test_device(client)
+    
+    telemetry_payload: dict[str, object] = {
+        "device_id": device_data["id"],
+        "metric_name": "humidity",
+        "metric_value": 150,
+        "timestamp": "2026-05-09T12:00:00Z",
+    }
+    
+    response = client.post("/api/v1/telemetry", json=telemetry_payload)
+    
+    assert response.status_code == status.HTTP_201_CREATED
+    
+    response = client.get(
+        f"/api/v1/devices/{device_data['id']}/telemetry"
+    )
+    
+    data = response.json()
+    
+    assert data[0]["is_anomaly"] is False
+    assert data[0]["anomaly_score"] == 0.0

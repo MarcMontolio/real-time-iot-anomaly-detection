@@ -36,10 +36,7 @@ async def create_telemetry_event_service(
         offset=0,
         )
         
-        historical_values = [
-            event.metric_value
-            for event in historical_events
-        ]
+        historical_values = [event.metric_value for event in historical_events]
         
         if len(historical_values) >= 3:
             is_anomaly, anomaly_score = detect_anomaly(
