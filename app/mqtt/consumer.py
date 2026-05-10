@@ -59,3 +59,15 @@ def start_consumer() -> None:
     client.connect(BROKER, PORT, 60)
     
     client.loop_forever()
+
+
+def start_consumer_background() -> mqtt.Client:
+    client = mqtt.Client()
+
+    client.on_connect = on_connect
+    client.on_message = on_message
+
+    client.connect(BROKER, PORT, 60)
+    client.loop_start()
+
+    return client

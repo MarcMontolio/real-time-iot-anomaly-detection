@@ -15,6 +15,8 @@ from app.schemas.telemetry_event import TelemetryEventCreate
 
 from app.services.anomaly_detection import detect_anomaly
 
+from app.websockets.connection_manager import manager
+
 async def create_telemetry_event_service(
     db: AsyncSession,
     telemetry_event_data: TelemetryEventCreate,
@@ -54,6 +56,18 @@ async def create_telemetry_event_service(
         
         await db.commit()
         await db.refresh(telemetry_event)
+        
+        await manager.broadcast(
+            {
+                "id": telemetry_event.id,
+                "device_id": telemetry_event.device_id,
+                "metric_name": telemetry_event.metric_name,
+                "metric_value": telemetry_event.metric_value,
+                "timestamp": telemetry_event.timestamp.isoformat(),
+                "is_anomaly": telemetry_event.is_anomaly,
+                "anomaly_score": telemetry_event.anomaly_score,  
+            }
+        )
         
         return telemetry_event
     except Exception:
