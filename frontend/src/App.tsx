@@ -25,21 +25,28 @@ function App() {
   const [events, setEvents] = useState<TelemetryEvent[]>([]);
 
   useEffect(() => {
-    const websocket = new WebSocket("ws://127.0.0.1:8000/ws/telemetry");
+    const websocket = new WebSocket("ws://localhost:8000/ws/telemetry");
 
-    websocket.onopen = () => {
+    websocket.addEventListener("open", () => {
+      console.log("Websocket connected")
       setConnected(true);
-    };
+    });
 
-    websocket.onclose = () => {
+    websocket.addEventListener("close", () => {
+      console.log("WebSocket closed")
       setConnected(false);
-    };
+    });
 
-    websocket.onmessage = (event) => {
+    websocket.addEventListener("error", (error) => {
+      console.log("WebSocket error", error)
+      setConnected(false);
+    });
+
+    websocket.addEventListener("message", (event) => {
       const data: TelemetryEvent = JSON.parse(event.data);
 
       setEvents((previousEvents) => [data, ...previousEvents].slice(0, 50));
-    };
+    });
 
     return () => {
       websocket.close();
@@ -72,9 +79,8 @@ function App() {
             <h2 className="text-sm text-zinc-400 mb-2">WebSocket Status</h2>
 
             <p
-              className={`text-2xl font-semibold ${
-                connected ? "text-green-400" : "text-red-400"
-              }`}
+              className={`text-2xl font-semibold ${connected ? "text-green-400" : "text-red-400"
+                }`}
             >
               {connected ? "Connected" : "Disconnected"}
             </p>
@@ -98,7 +104,7 @@ function App() {
         <section className="mt-8 rounded-2xl border border-zinc-800 bg-zinc-900 p-6">
           <h2 className="text-xl font-semibold mb-4">Live Telemetry</h2>
 
-          <div className="h-96">
+          <div className="h-96 min-h-96 w-full">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={chartData}>
                 <CartesianGrid stroke="#27272a" />
@@ -141,9 +147,8 @@ function App() {
                 {events.map((event) => (
                   <tr
                     key={event.id}
-                    className={`border-b border-zinc-800 ${
-                      event.is_anomaly ? "bg-red-950/40" : ""
-                    }`}
+                    className={`border-b border-zinc-800 ${event.is_anomaly ? "bg-red-950/40" : ""
+                      }`}
                   >
                     <td className="py-3 text-zinc-300">
                       {new Date(event.timestamp).toLocaleTimeString()}
