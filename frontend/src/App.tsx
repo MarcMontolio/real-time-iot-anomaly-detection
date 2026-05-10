@@ -1,5 +1,15 @@
 import { useEffect, useState } from "react";
 
+import {
+  CartesianGrid,
+  Line,
+  LineChart,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from "recharts";
+
 type TelemetryEvent = {
   id: number;
   device_id: number;
@@ -28,13 +38,21 @@ function App() {
     websocket.onmessage = (event) => {
       const data: TelemetryEvent = JSON.parse(event.data);
 
-      setEvents((previousEvents) => [data, ...previousEvents]);
+      setEvents((previousEvents) => [data, ...previousEvents].slice(0, 50));
     };
 
     return () => {
       websocket.close();
     };
   }, []);
+
+  const chartData = events
+    .slice()
+    .reverse()
+    .map((event) => ({
+      time: new Date(event.timestamp).toLocaleTimeString(),
+      value: event.metric_value,
+    }));
 
   return (
     <main className="min-h-screen bg-zinc-950 text-zinc-100 p-8">
@@ -43,6 +61,7 @@ function App() {
           <h1 className="text-4xl font-bold">
             Real-Time IoT Anomaly Detection
           </h1>
+
           <p className="text-zinc-400 mt-2">
             MQTT telemetry streaming with anomaly detection
           </p>
@@ -51,6 +70,7 @@ function App() {
         <section className="grid gap-6 md:grid-cols-3">
           <div className="rounded-2xl border border-zinc-800 bg-zinc-900 p-6">
             <h2 className="text-sm text-zinc-400 mb-2">WebSocket Status</h2>
+
             <p
               className={`text-2xl font-semibold ${
                 connected ? "text-green-400" : "text-red-400"
@@ -62,11 +82,13 @@ function App() {
 
           <div className="rounded-2xl border border-zinc-800 bg-zinc-900 p-6">
             <h2 className="text-sm text-zinc-400 mb-2">Total Events</h2>
+
             <p className="text-2xl font-semibold">{events.length}</p>
           </div>
 
           <div className="rounded-2xl border border-zinc-800 bg-zinc-900 p-6">
             <h2 className="text-sm text-zinc-400 mb-2">Active Anomalies</h2>
+
             <p className="text-2xl font-semibold text-yellow-400">
               {events.filter((event) => event.is_anomaly).length}
             </p>
@@ -75,8 +97,27 @@ function App() {
 
         <section className="mt-8 rounded-2xl border border-zinc-800 bg-zinc-900 p-6">
           <h2 className="text-xl font-semibold mb-4">Live Telemetry</h2>
-          <div className="h-96 rounded-xl border border-dashed border-zinc-700 flex items-center justify-center text-zinc-500">
-            Chart placeholder
+
+          <div className="h-96">
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart data={chartData}>
+                <CartesianGrid stroke="#27272a" />
+
+                <XAxis dataKey="time" stroke="#a1a1aa" />
+
+                <YAxis stroke="#a1a1aa" />
+
+                <Tooltip />
+
+                <Line
+                  type="monotone"
+                  dataKey="value"
+                  stroke="#4ade80"
+                  strokeWidth={2}
+                  dot={false}
+                />
+              </LineChart>
+            </ResponsiveContainer>
           </div>
         </section>
 
@@ -98,16 +139,26 @@ function App() {
 
               <tbody>
                 {events.map((event) => (
-                  <tr key={event.id} className="border-b border-zinc-800">
+                  <tr
+                    key={event.id}
+                    className={`border-b border-zinc-800 ${
+                      event.is_anomaly ? "bg-red-950/40" : ""
+                    }`}
+                  >
                     <td className="py-3 text-zinc-300">
                       {new Date(event.timestamp).toLocaleTimeString()}
                     </td>
+
                     <td className="py-3">{event.device_id}</td>
+
                     <td className="py-3">{event.metric_name}</td>
+
                     <td className="py-3">{event.metric_value}</td>
+
                     <td className="py-3">
                       {event.is_anomaly ? "Yes" : "No"}
                     </td>
+
                     <td className="py-3">{event.anomaly_score.toFixed(2)}</td>
                   </tr>
                 ))}
