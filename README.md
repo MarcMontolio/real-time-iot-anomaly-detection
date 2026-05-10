@@ -1,26 +1,36 @@
 # Real-Time IoT Anomaly Detection System
 
-Event-driven backend platform for real-time IoT telemetry ingestion, anomaly detection and live alerting using FastAPI, MQTT, Redis, PostgreSQL and machine learning.
+Real-time event-driven IoT monitoring platform with live anomaly detection and streaming telemetry dashboards.
 
-## Overview
+---
 
-The goal of this project is to demonstrate production-oriented backend engineering practices applied to real-time IoT monitoring and anomaly detection systems.
+## Dashboard
 
-This project aims to simulate and monitor IoT devices in real time, process telemetry streams and detect anomalous behaviour using machine learning models.
+![Dashboard](assets/dashboard.png)
 
-The platform is being designed with a production-oriented architecture focused on backend engineering, event-driven systems and observability.
+## API Documentation
 
-Current features include:
+![Swagger](assets/swagger.png)
 
-- FastAPI backend
-- Modular API architecture
-- Health check endpoint
+---
+
+## Features
+
+- Real-time telemetry ingestion
+- MQTT event streaming
+- Live WebSocket dashboard
+- Machine learning anomaly detection
+- Async FastAPI backend
+- PostgreSQL persistence
+- Typed Python codebase
+- REST API with OpenAPI documentation
+- Modular service-oriented architecture
 - Automated testing with pytest
 - Static analysis with Ruff and mypy
-- Typed Python codebase
-- Environment-based configuration with pydantic-settings
 
-## Planned Architecture
+---
+
+## Architecture
 
 ```text
 IoT Devices / Simulator
@@ -33,31 +43,42 @@ IoT Devices / Simulator
         |
         +--> PostgreSQL
         |
-        +--> Redis Pub/Sub
-                    |
-                    v
-       Anomaly Detection Worker
-                    |
-                    v
-              WebSocket API
+        +--> WebSocket Broadcast
                     |
                     v
            Real-time Dashboard
 ```
 
+---
+
 ## Tech Stack
+
+### Backend
 
 - Python
 - FastAPI
+- SQLAlchemy Async
 - PostgreSQL
-- Redis
-- MQTT
-- Docker
+- MQTT (Mosquitto)
 - WebSockets
 - scikit-learn
+
+### Frontend
+
+- React
+- TypeScript
+- TailwindCSS
+- Recharts
+- Vite
+
+### Tooling
+
+- Docker Compose
 - pytest
 - Ruff
 - mypy
+
+---
 
 ## Project Structure
 
@@ -65,12 +86,29 @@ IoT Devices / Simulator
 app/
 ├── api/
 ├── core/
+├── db/
+├── mqtt/
+├── repositories/
+├── schemas/
+├── services/
+├── websockets/
 └── main.py
 
+frontend/
 tests/
+scripts/
 ```
 
+---
+
 ## Getting Started
+
+### Clone repository
+
+```bash
+git clone <your_url_repo>
+cd real-time-iot-anomaly-detection
+```
 
 ### Create virtual environment
 
@@ -92,23 +130,51 @@ Linux/macOS
 source .venv/bin/activate
 ```
 
-### Install dependencies
+### Install backend dependencies
 
 ```bash
 pip install -e ".[dev]"
 ```
 
-### Run the API
+### Start infrastructure
+
+```bash
+docker compose up -d
+```
+
+### Run backend
 
 ```bash
 uvicorn app.main:app --reload
 ```
 
-API documentation:
+Backend available at:
+
+```text
+http://127.0.0.1:8000
+```
+
+Swagger documentation:
 
 ```text
 http://127.0.0.1:8000/docs
 ```
+
+### Run frontend
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+Frontend available at:
+
+```text
+http://localhost:5173
+```
+
+---
 
 ## Running Tests
 
@@ -116,36 +182,42 @@ http://127.0.0.1:8000/docs
 pytest -v
 ```
 
+---
+
 ## Current API Endpoints
 
-| Method | Endpoint       | Description  |
-|--------|----------------|--------------|
-| GET    | /api/v1/health | Health check |
+| Method | Endpoint | Description |
+| --- | --- | --- |
+| GET | `/api/v1/health` | Health check |
+| POST | `/api/v1/devices` | Create device |
+| GET | `/api/v1/devices` | List devices |
+| GET | `/api/v1/devices/{device_id}` | Get device |
+| GET | `/api/v1/devices/{device_id}/telemetry` | Device telemetry |
+| POST | `/api/v1/telemetry` | Create telemetry event |
+| GET | `/api/v1/telemetry` | List telemetry events |
+---
 
-## Roadmap
+## Example Use Cases
 
-- MQTT ingestion worker
-- PostgreSQL integration
+- Industrial IoT monitoring
+- Smart building telemetry
+- Predictive maintenance
+- Environmental sensor monitoring
+- Edge telemetry analysis
+- Real-time alerting systems
+---
+
+## Future Improvements
+
 - Redis event bus
-- IoT simulator
-- Streaming anomaly detection
-- Real-time WebSocket dashboard
-- Docker Compose deployment
-- Metrics and observability
 - Kafka integration
 - Advanced ML models
-
-## Development Philosophy
-
-This project is intentionally being built using production-oriented engineering practices:
-
-- Modular architecture
-- Typed Python
-- Separation of concerns
-- Test-first mindset
-- Event-driven design
-- Scalable backend patterns
-- Infrastructure reproducibility
+- Authentication & RBAC
+- Multi-device dashboards
+- Historical analytics
+- Prometheus & Grafana observability
+- Kubernetes deployment
+---
 
 ## License
 
