@@ -1,6 +1,6 @@
-from collections.abc import AsyncGenerator, Generator
 import asyncio
 import sys
+from collections.abc import AsyncGenerator, Generator
 
 import psycopg
 import pytest
@@ -11,7 +11,6 @@ from sqlalchemy.pool import NullPool
 from app.api.deps import get_db
 from app.core.config import settings
 from app.main import app
-
 
 if sys.platform == "win32":
     asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())

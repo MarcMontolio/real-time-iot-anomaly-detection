@@ -3,7 +3,6 @@ from datetime import UTC, datetime, timedelta
 
 import requests
 
-
 API_URL = "http://127.0.0.1:8000/api/v1/telemetry"
 DEVICE_ID = 1
 

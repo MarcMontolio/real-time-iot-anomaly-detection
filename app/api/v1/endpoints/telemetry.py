@@ -1,10 +1,13 @@
-from fastapi import APIRouter, Depends, status, Query
+from fastapi import APIRouter, Depends, Query, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.schemas.telemetry_event import TelemetryEventCreate, TelemetryEventRead
-from app.services.telemetry_service import get_all_telemetry_events_service, create_telemetry_event_service
 from app.api.deps import get_db
 from app.models.telemetry_event import TelemetryEvent
+from app.schemas.telemetry_event import TelemetryEventCreate, TelemetryEventRead
+from app.services.telemetry_service import (
+    create_telemetry_event_service,
+    get_all_telemetry_events_service,
+)
 
 router = APIRouter(tags=["telemetry"])
 

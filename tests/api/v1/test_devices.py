@@ -1,6 +1,5 @@
-from fastapi.testclient import TestClient
 from fastapi import status
-
+from fastapi.testclient import TestClient
 
 
 def test_post_devices_returns_ok(client: TestClient) -> None:

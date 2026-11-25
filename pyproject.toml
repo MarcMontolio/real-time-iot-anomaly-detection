@@ -5,9 +5,9 @@ description = "Real-time IoT anomaly detection system using FastAPI, MQTT, Redis
 requires-python = ">=3.12"
 dependencies = [
     "fastapi",
-    "uvicorn",
+    "uvicorn[standard]",
     "pydantic-settings",
-    "sqlalchemy",
+    "sqlalchemy[asyncio]",
     "asyncpg",
     "psycopg[binary]",
     "alembic",
@@ -38,3 +38,7 @@ asyncio_mode = "auto"
 [tool.setuptools.packages.find]
 include = ["app*"]
 exclude = ["docker*"]
+[tool.ruff.lint.per-file-ignores]
+"app/api/v1/endpoints/*.py" = ["B008"]
+"app/mqtt/ingestion.py" = ["TRY004"]
+"app/mqtt/parser.py" = ["TRY004"]

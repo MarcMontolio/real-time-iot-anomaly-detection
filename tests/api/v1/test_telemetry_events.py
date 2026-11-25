@@ -1,5 +1,5 @@
-from fastapi.testclient import TestClient
 from fastapi import status
+from fastapi.testclient import TestClient
 
 
 def create_test_device(client: TestClient, device_id: str = "sensor-001") -> dict[str, object]:

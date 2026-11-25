@@ -1,10 +1,7 @@
 from fastapi import APIRouter
 
+from app.api.v1.endpoints import devices, health, telemetry
 from app.core.config import settings
-from app.api.v1.endpoints import health
-from app.api.v1.endpoints import devices
-from app.api.v1.endpoints import telemetry
-
 
 router = APIRouter(
     prefix=settings.api_v1_prefix

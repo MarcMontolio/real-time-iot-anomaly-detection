@@ -1,6 +1,5 @@
 import paho.mqtt.client as mqtt
 
-
 BROKER = "127.0.0.1"
 PORT = 1883
 TOPIC = "iot/devices/+/telemetry"

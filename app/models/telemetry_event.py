@@ -1,11 +1,11 @@
+from datetime import datetime
 from typing import TYPE_CHECKING
 
-from sqlalchemy import DateTime, func, Integer, String, ForeignKey, Boolean, Float
+from sqlalchemy import Boolean, DateTime, Float, ForeignKey, Integer, String, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from datetime import datetime
-
 from app.db.base import Base
+
 if TYPE_CHECKING:
     from app.models.device import Device
 

@@ -1,8 +1,7 @@
 import pytest
-
-from sqlalchemy.ext.asyncio import AsyncSession
 from fastapi import status
 from fastapi.testclient import TestClient
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.mqtt.ingestion import ingest_mqtt_telemetry_message
 

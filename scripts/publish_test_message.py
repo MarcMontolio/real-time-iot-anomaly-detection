@@ -1,4 +1,4 @@
-import paho.mqtt.publish as publish
+from paho.mqtt import publish
 
 publish.single(
     topic="iot/devices/sensor-001/telemetry",

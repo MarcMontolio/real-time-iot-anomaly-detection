@@ -1,6 +1,11 @@
 import pytest
 
-from app.services.anomaly_detection import calculate_mean, calculate_standard_deviation, calculate_z_score, detect_anomaly
+from app.services.anomaly_detection import (
+    calculate_mean,
+    calculate_standard_deviation,
+    calculate_z_score,
+    detect_anomaly,
+)
 
 
 def test_calculate_mean_returns_correct_average() -> None:

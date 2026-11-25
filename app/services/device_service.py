@@ -2,7 +2,11 @@ from fastapi import HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.models.device import Device
-from app.repositories.device_repository import create_device, get_device_by_device_id, get_all_devices
+from app.repositories.device_repository import (
+    create_device,
+    get_all_devices,
+    get_device_by_device_id,
+)
 from app.schemas.device import DeviceCreate
 
 

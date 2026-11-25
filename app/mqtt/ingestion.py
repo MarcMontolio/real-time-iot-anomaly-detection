@@ -6,6 +6,7 @@ from app.mqtt.parser import extract_device_id_from_topic, parse_telemetry_payloa
 from app.repositories.device_repository import get_device_by_device_id
 from app.schemas.telemetry_event import TelemetryEventCreate
 from app.services.telemetry_service import create_telemetry_event_service
+
 # from app.models.telemetry_event import TelemetryEvent
 
 
