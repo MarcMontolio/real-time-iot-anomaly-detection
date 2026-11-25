@@ -38,18 +38,18 @@ app.dependency_overrides[get_db] = override_get_db
 
 
 @pytest.fixture
-def client() -> Generator[TestClient]:
+def client(clean_database: None) -> Generator[TestClient]:
     with TestClient(app) as test_client:
         yield test_client
 
 
 @pytest.fixture
-async def db_session() -> AsyncGenerator[AsyncSession, None]:
+async def db_session(clean_database: None) -> AsyncGenerator[AsyncSession, None]:
     async with TestingSessionLocal() as session:
         yield session
 
 
-@pytest.fixture(autouse=True)
+@pytest.fixture()
 def clean_database() -> Generator[None]:
     test_sync_url = settings.test_database_sync_url.replace("+psycopg", "")
 

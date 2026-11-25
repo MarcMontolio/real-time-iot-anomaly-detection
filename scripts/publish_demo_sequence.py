@@ -1,10 +1,21 @@
+import argparse
 import json
 import threading
 from datetime import UTC, datetime, timedelta
 
 import paho.mqtt.client as mqtt
 
-TOPIC = "iot/devices/sensor-001/telemetry"
+parser = argparse.ArgumentParser(description="Publish a demo MQTT telemetry sequence")
+
+parser.add_argument(
+    "--device-id",
+    default="sensor-001",
+    help="Target device ID (default: sensor-001)",
+)
+
+args = parser.parse_args()
+
+TOPIC = f"iot/devices/{args.device_id}/telemetry"
 HOSTNAME = "127.0.0.1"
 PORT = 1883
 
@@ -45,7 +56,7 @@ try:
     if not connected.wait(timeout=5):
         raise RuntimeError("Could not connect to MQTT broker")
 
-    base_time = datetime.now(UTC)
+    base_time = datetime.now(UTC) - timedelta(seconds=len(VALUES) - 1)
 
     for index, value in enumerate(VALUES):
         payload = {

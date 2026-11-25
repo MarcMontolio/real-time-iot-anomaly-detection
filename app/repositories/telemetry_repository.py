@@ -26,7 +26,12 @@ async def create_telemetry_event(
 async def get_all_telemetry_events(
     db: AsyncSession, limit: int, offset: int
 ) -> list[TelemetryEvent]:
-    statement = select(TelemetryEvent).offset(offset).limit(limit)
+    statement = (
+        select(TelemetryEvent)
+        .order_by(TelemetryEvent.timestamp.desc(), TelemetryEvent.id.desc())
+        .offset(offset)
+        .limit(limit)
+    )
     result = await db.execute(statement)
     return list(result.scalars().all())
 

@@ -4,11 +4,12 @@ from dataclasses import dataclass
 
 import paho.mqtt.client as mqtt
 
+from app.core.config import settings
 from app.db.session import AsyncSessionLocal
 from app.mqtt.ingestion import ingest_mqtt_telemetry_message
 
-BROKER = "127.0.0.1"
-PORT = 1883
+BROKER = settings.mqtt_host
+PORT = settings.mqtt_port
 TOPIC = "iot/devices/+/telemetry"
 
 
@@ -41,10 +42,11 @@ def on_connect(
     client: mqtt.Client,
     userdata: object | None,
     flags: dict[str, int],
-    rc: int,
+    reason_code: object,
+    properties: object,
 ) -> None:
-    print(f"Connected with result code {rc}")
-    if rc == 0:
+    print(f"Connected with result code {reason_code}")
+    if reason_code == 0:
         client.subscribe(TOPIC)
         print(f"Subscribed to {TOPIC}")
 
@@ -82,7 +84,9 @@ def start_consumer_background(
     queue: asyncio.Queue[tuple[str, str]],
 ) -> mqtt.Client:
     context = MQTTContext(loop=loop, queue=queue)
-    client = mqtt.Client(userdata=context)
+    client = mqtt.Client(
+        callback_api_version=mqtt.CallbackAPIVersion.VERSION2, userdata=context
+    )
 
     client.on_connect = on_connect
     client.on_message = on_message
